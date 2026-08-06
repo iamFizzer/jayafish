@@ -1,0 +1,1 @@
+@props(['id','title'])<div id="{{$id}}" class="modal" aria-hidden="true"><div class="modal-panel"><div class="mb-6 flex items-center justify-between"><div><h2 class="font-display text-xl">{{$title}}</h2><p class="text-sm text-slate-500">Lengkapi data berikut dengan benar.</p></div><button type="button" class="btn-icon" data-close-modal>×</button></div>{{$slot}}</div></div>

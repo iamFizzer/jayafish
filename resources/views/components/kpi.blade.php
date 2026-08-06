@@ -1,0 +1,1 @@
+@props(['label','value','icon','color'=>'teal'])<div class="card kpi-card"><div class="kpi-icon {{$color}}">{{$icon}}</div><div><p>{{$label}}</p><h3>{{$value}}</h3><span>Periode terpilih</span></div></div>
