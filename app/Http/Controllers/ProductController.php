@@ -11,7 +11,22 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $products = Product::with('category')->when($request->q, fn ($q, $v) => $q->where('name', 'like', "%$v%"))->latest()->paginate(12)->withQueryString();
+        $filters = $request->validate([
+            'q' => ['nullable', 'string', 'max:100'],
+            'category_id' => ['nullable', 'integer', 'exists:categories,id'],
+        ]);
+
+        $products = Product::with('category')
+            ->when($filters['q'] ?? null, function ($query, string $keyword) {
+                $query->where(function ($productQuery) use ($keyword) {
+                    $productQuery->where('name', 'like', "%{$keyword}%")
+                        ->orWhere('sku', 'like', "%{$keyword}%");
+                });
+            })
+            ->when($filters['category_id'] ?? null, fn ($query, $categoryId) => $query->where('category_id', $categoryId))
+            ->latest()
+            ->paginate(12)
+            ->withQueryString();
         $categories = Category::orderBy('name')->get();
         return view('products.index', compact('products', 'categories'));
     }
